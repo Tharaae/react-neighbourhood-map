@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import MapComponent from './MapComponent';
-import PlacesList from './PlacesList';
+import SearchPlaces from './SearchPlaces';
 import './App.css';
 
 class App extends Component {
   state = {
     defaultCenter: { lat: -33.71697, lng: 150.9171843 },
-    defaultZoom: 12,
+    defaultZoom: 14,
     places: []
   }
 
@@ -16,6 +16,7 @@ class App extends Component {
       this.map = {};
       this.setMap = this.setMap.bind(this);
       this.setInitialPlacesList = this.setInitialPlacesList.bind(this);
+      this.handleSearch = this.handleSearch.bind(this);
   }
 
   setInitialPlacesList() {
@@ -48,7 +49,47 @@ class App extends Component {
 
   setMap(map) {
     this.map = map;
-    if(map) {console.log('App from set map',this.map.getBounds())};
+    if(map) {console.log('App from set map',this.map);};
+  }
+
+  setMarker(place, marker) {
+    if (!place.marker) {
+      place['marker'] = marker;
+      place['visible'] = true;
+    };
+  }
+
+  handleSearch(query) {
+    const {places} = this.state;
+    const results = places.filter((place) => place.name.toLowerCase().includes(query));
+    let changed = false;
+
+    if(places.length !== results.length) {
+      places.forEach((place) => {
+        if(place.marker && place.visible) {
+          place.visible = false;
+          changed = true;
+        }
+      });
+
+      results.forEach((place) => {
+        if (place.marker && !place.visible) {
+          place.visible = true;
+          changed = true;
+        }
+      });
+    } else {
+      places.forEach((place) => {
+        if(place.marker && !place.visible) {
+          place.visible = true;
+          changed = true;
+        }
+      });
+    }
+
+    if(changed) {
+      this.setState({places});
+    }
   }
 
   render() {
@@ -56,11 +97,10 @@ class App extends Component {
     const {defaultCenter, defaultZoom, places} = this.state;
     return (
       <div id="app" className="app">
-        <div id="list-panel" className="list-panel">
-          <PlacesList
-            places={places}
-          />
-        </div>
+        <SearchPlaces
+          places={places}
+          handleSearch={this.handleSearch}
+        />
 
         <div className="main">
           <header className="app-header">
@@ -76,6 +116,7 @@ class App extends Component {
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
             setMap={this.setMap}
+            setMarker={this.setMarker}
             onMapLoaded={this.setInitialPlacesList}
             places={places}
           />
