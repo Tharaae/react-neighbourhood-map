@@ -7,7 +7,7 @@ const Place = (props) => {
 
   return (
     <div className="place">
-      <h4>{place.name}</h4>
+      {place.name}
     </div>
   );
 };

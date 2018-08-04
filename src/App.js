@@ -12,9 +12,14 @@ class App extends Component {
 
   constructor() {
       super();
+      this.googleMapsAPIsURL = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA83ru5Va-VflHbHHAxRcz1TV9QMspFJa0';
       this.map = {};
       this.setMap = this.setMap.bind(this);
+      this.setInitialPlacesList = this.setInitialPlacesList.bind(this);
+  }
 
+  setInitialPlacesList() {
+    if(this.state.places.length === 0) {
       const {defaultCenter} = this.state;
 
       const google = window.google;
@@ -27,22 +32,23 @@ class App extends Component {
         },
         (places, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-            this.setState({places});
-            console.log('App constructor places state set', this.state.places);
+            if(places.length !== 0) {
+              this.setState({places});
+              console.log('App constructor places state set', this.state.places);
+            } else {
+              alert('No places retrieved!');
+            }
           } else {
             alert(`Error ${status} occured.`);
           }
         }
       );
+    }
   }
 
   setMap(map) {
     this.map = map;
-    console.log('App from set map',this.map);
-  }
-
-  componentDidMount() {
-
+    if(map) {console.log('App from set map',this.map.getBounds())};
   }
 
   render() {
@@ -63,11 +69,15 @@ class App extends Component {
 
           <MapComponent
             isMarkerShown
+            googleMapURL={this.googleMapsAPIsURL}
+            loadingElement={<div />}
             containerElement={<div className="map-container" />}
             mapElement={<div className="map" />}
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
             setMap={this.setMap}
+            onMapLoaded={this.setInitialPlacesList}
+            places={places}
           />
         </div>
       </div>
