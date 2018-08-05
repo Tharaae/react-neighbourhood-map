@@ -17,6 +17,7 @@ class App extends Component {
       this.setMap = this.setMap.bind(this);
       this.setInitialPlacesList = this.setInitialPlacesList.bind(this);
       this.handleSearch = this.handleSearch.bind(this);
+      this.handlePlaceSelection = this.handlePlaceSelection.bind(this);
   }
 
   setInitialPlacesList() {
@@ -35,7 +36,6 @@ class App extends Component {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
             if(places.length !== 0) {
               this.setState({places});
-              console.log('App constructor places state set', this.state.places);
             } else {
               alert('No places retrieved!');
             }
@@ -49,7 +49,6 @@ class App extends Component {
 
   setMap(map) {
     this.map = map;
-    if(map) {console.log('App from set map',this.map);};
   }
 
   setMarker(place, marker) {
@@ -68,6 +67,7 @@ class App extends Component {
       places.forEach((place) => {
         if(place.marker && place.visible) {
           place.visible = false;
+          place.selected = false;
           changed = true;
         }
       });
@@ -92,14 +92,41 @@ class App extends Component {
     }
   }
 
+  handlePlaceSelection(place, prevSelectedId) {
+    console.log('handlePlaceSelection', place, 'prev id', prevSelectedId);
+     const {places} = this.state;
+     let changed = false;
+
+     if(prevSelectedId) {
+       const prevSelectedPlace = places.filter((place) => place.id === prevSelectedId);
+       console.log('prev place found', prevSelectedPlace);
+       if(prevSelectedPlace.length > 0 && prevSelectedPlace[0].selected) {
+         prevSelectedPlace[0].selected = false;
+         changed = true;
+         console.log('prev selected place set to', prevSelectedPlace[0].selected);
+       }
+     }
+
+     if(place && !place.selected) {
+       console.log('newly selected place found', place);
+       place['selected'] = true;
+       changed = true;
+       console.log('newly selected place set to', place);
+     }
+
+    if(changed) {
+      this.setState({places});
+    }
+  }
+
   render() {
-    console.log('App render');
     const {defaultCenter, defaultZoom, places} = this.state;
     return (
       <div id="app" className="app">
         <SearchPlaces
           places={places}
           handleSearch={this.handleSearch}
+          handlePlaceSelection={this.handlePlaceSelection}
         />
 
         <div className="main">

@@ -45,14 +45,19 @@
   padding: 0 1.5em;
 }
 
-.list li div {
+.list li {
   border-bottom: 1px dotted #aaa;
   padding-bottom: 0.25em;
 }
 
-.list li div:hover {
+.place:hover {
   cursor: pointer;
   color: lightgreen;
+}
+
+.place-selected {
+  color: lightgreen;
+  font-weight: bold;
 }
 
 .main {

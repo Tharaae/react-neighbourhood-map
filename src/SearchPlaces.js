@@ -14,7 +14,7 @@ class SearchPlaces extends Component {
   }
 
   render() {
-    const {places} = this.props;
+    const {places, handlePlaceSelection} = this.props;
     const {query} = this.state;
 
     const filteredPlaces = places.filter((place) => place.name.toLowerCase().includes(query));
@@ -29,6 +29,7 @@ class SearchPlaces extends Component {
           />
         <PlacesList
           places={filteredPlaces}
+          handlePlaceSelection={handlePlaceSelection}
         />
       </div>
     );
