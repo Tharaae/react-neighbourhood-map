@@ -46,8 +46,10 @@ class App extends Component {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
             // if parke array successfully fetched, set places state accordingly
             if(places.length !== 0) {
-              // initially set all places as visible (for markers display)
-              places.forEach((place) => place['visible'] = true);
+              places.forEach((place) => {
+                // initially set all places as visible (for markers display)
+                place['visible'] = true;
+              });
               this.setState({places});
             } else {
               alert('No places retrieved!');
@@ -126,6 +128,7 @@ class App extends Component {
       <div id="app" className="app">
         <SearchPlaces
           places={places}
+          selectedPlaceId={selectedPlaceId}
           handleSearch={this.handleSearch}
           handlePlaceSelection={this.handlePlaceSelection}
         />
@@ -147,6 +150,7 @@ class App extends Component {
             onMapLoaded={this.setInitialPlacesList}
             places={places}
             selectedPlaceId={selectedPlaceId}
+            handlePlaceSelection={this.handlePlaceSelection}
           />
         </div>
       </div>

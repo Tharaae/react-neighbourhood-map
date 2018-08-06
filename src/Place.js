@@ -6,7 +6,7 @@ import './App.css';
  * used to display every list item in PlacesList component
  */
 const Place = (props) => {
-  
+
   //Current selected/clicked place is passed from parent PlacesList component.
   const {place, handlePlaceSelection, selectedPlaceId} = props;
 
@@ -15,7 +15,7 @@ const Place = (props) => {
     <div
       id={place.id}
       className= {place.id === selectedPlaceId? "place place-selected" : "place"}
-      onClick={() => handlePlaceSelection(place)}
+      onClick={() => handlePlaceSelection(place.id)}
     >
       {place.name}
     </div>

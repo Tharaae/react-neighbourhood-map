@@ -58,6 +58,7 @@
 .place-selected {
   color: lightgreen;
   font-weight: bold;
+  font-size: 1.1em;
 }
 
 .main {

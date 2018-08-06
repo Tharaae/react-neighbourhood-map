@@ -20,10 +20,8 @@ class SearchPlaces extends Component {
     // to make search not case-sensetive
     const query = q.trim().toLowerCase();
 
-    console.log('SearchPlaces handleChange function', query);
     // if trimed lowercase new query is different than current one
     if (query !== this.state.query) {
-      console.log('SearchPlaces handleChange function: query changed so call App handleSearch');
       // run handleSearch function passed from parent App component
       // to handle correnponding map markers filtering
       this.props.handleSearch(query);
@@ -34,7 +32,7 @@ class SearchPlaces extends Component {
   }
 
   render() {
-    const {places, handlePlaceSelection} = this.props;
+    const {places, selectedPlaceId, handlePlaceSelection} = this.props;
     const {query} = this.state;
 
     // get filtered set of places according to the new query
@@ -53,6 +51,7 @@ class SearchPlaces extends Component {
         />
         <PlacesList
           places = {filteredPlaces}
+          selectedPlaceId={selectedPlaceId}
           handlePlaceSelection = {handlePlaceSelection}
         />
       </div>
