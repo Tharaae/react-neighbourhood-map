@@ -7,7 +7,8 @@ class App extends Component {
   state = {
     defaultCenter: { lat: -33.71697, lng: 150.9171843 },
     defaultZoom: 14,
-    places: []
+    places: [],
+    selectedPlaceId: ''
   }
 
   constructor() {
@@ -67,7 +68,6 @@ class App extends Component {
       places.forEach((place) => {
         if(place.marker && place.visible) {
           place.visible = false;
-          place.selected = false;
           changed = true;
         }
       });
@@ -88,39 +88,18 @@ class App extends Component {
     }
 
     if(changed) {
-      this.setState({places});
+      this.setState({places, selectedPlaceId: null});
     }
   }
 
-  handlePlaceSelection(place, prevSelectedId) {
-    console.log('handlePlaceSelection', place, 'prev id', prevSelectedId);
-     const {places} = this.state;
-     let changed = false;
-
-     if(prevSelectedId) {
-       const prevSelectedPlace = places.filter((place) => place.id === prevSelectedId);
-       console.log('prev place found', prevSelectedPlace);
-       if(prevSelectedPlace.length > 0 && prevSelectedPlace[0].selected) {
-         prevSelectedPlace[0].selected = false;
-         changed = true;
-         console.log('prev selected place set to', prevSelectedPlace[0].selected);
-       }
+   handlePlaceSelection(selectedPlaceId) {
+     if(selectedPlaceId !== this.state.selectedPlaceId) {
+       this.setState({selectedPlaceId});
      }
-
-     if(place && !place.selected) {
-       console.log('newly selected place found', place);
-       place['selected'] = true;
-       changed = true;
-       console.log('newly selected place set to', place);
-     }
-
-    if(changed) {
-      this.setState({places});
-    }
-  }
+   }
 
   render() {
-    const {defaultCenter, defaultZoom, places} = this.state;
+    const {defaultCenter, defaultZoom, places, selectedPlaceId} = this.state;
     return (
       <div id="app" className="app">
         <SearchPlaces
@@ -146,6 +125,7 @@ class App extends Component {
             setMarker={this.setMarker}
             onMapLoaded={this.setInitialPlacesList}
             places={places}
+            selectedPlaceId={selectedPlaceId}
           />
         </div>
       </div>

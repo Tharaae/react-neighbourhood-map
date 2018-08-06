@@ -9,8 +9,10 @@ class SearchPlaces extends Component {
 
   handleChange(q) {
     const query = q.trim().toLowerCase();
-    this.props.handleSearch(query);
-    this.setState({query});
+    if(query !== this.state.query) {
+      this.props.handleSearch(query);
+      this.setState({query});
+    }
   }
 
   render() {
