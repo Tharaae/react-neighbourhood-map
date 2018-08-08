@@ -8,7 +8,7 @@ class App extends Component {
     // initial center
     defaultCenter: { lat: -33.71697, lng: 150.9171843 },
     // initial zoom
-    defaultZoom: 14,
+    defaultZoom: 10,
     // places list (to be fetched by setInitialPlacesList)
     places: [],
     // currently selected place id (initiall set to empty string)
@@ -39,8 +39,9 @@ class App extends Component {
       service.nearbySearch(
         {
           location: new google.maps.LatLng(defaultCenter.lat,defaultCenter.lng),
-          radius: 2000,
-          type: ['park']
+          radius: 30000,
+          type: ['park'],
+          keyword: 'national park'
         },
         (places, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -63,6 +64,18 @@ class App extends Component {
   }
 
   /*
+   * Gets the filtered list of places according to the provided query.
+   * Used in multiple places. So, it's important to have the filtering method
+   * in a single function for consistency across the code.
+   */
+  getFilteredPlacesList(places, query) {
+    // return places whose name or address(vicinity) includes the keyword
+    return places.filter((place) =>
+      place.name.toLowerCase().includes(query) ||
+      place.vicinity.toLowerCase().includes(query)
+    );
+  }
+  /*
    * Does actions required when a new search takes place.
    * Takes newly entered serch term/query as argument.
    * Thsi function is pased to SearchPlaces component to run onChange
@@ -70,7 +83,7 @@ class App extends Component {
   handleSearch(query) {
     const {places} = this.state;
     // get new search results
-    const results = places.filter((place) => place.name.toLowerCase().includes(query));
+    const results = this.getFilteredPlacesList(places, query);
     // flag to indicate if the places list actually changes by the new search
     let changed = false;
 
@@ -131,11 +144,12 @@ class App extends Component {
           selectedPlaceId={selectedPlaceId}
           handleSearch={this.handleSearch}
           handlePlaceSelection={this.handlePlaceSelection}
+          getFilteredPlacesList={this.getFilteredPlacesList}
         />
 
         <div className="main">
           <header className="app-header">
-            <h1>Neighbourhood Parks</h1>
+            <h1>City National Parks</h1>
           </header>
 
           <MapComponent

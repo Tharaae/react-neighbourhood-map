@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Place from './Place';
+import sortBy from 'sort-by';
 import './App.css';
 
 /*
@@ -57,10 +58,13 @@ class PlacesList extends Component {
     const {places} = this.props;
     const {selectedPlaceId} = this.state;
 
+    // get sorted list by place name
+    const sortedPlaces = places.sort(sortBy('name'));
+
     // pass selected place id to Place components to style accordingly
     return (
       <ol className="list">
-        {places.map((place) => (
+        {sortedPlaces.map((place) => (
           <li key={place.id}>
             <Place
               place={place}

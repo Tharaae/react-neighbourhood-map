@@ -32,11 +32,18 @@ class SearchPlaces extends Component {
   }
 
   render() {
-    const {places, selectedPlaceId, handlePlaceSelection} = this.props;
+    const {
+      places,
+      selectedPlaceId,
+      handlePlaceSelection,
+      getFilteredPlacesList
+    } = this.props;
+
     const {query} = this.state;
 
     // get filtered set of places according to the new query
-    const filteredPlaces = places.filter((place) => place.name.toLowerCase().includes(query));
+    // using the filtering method passed by App component
+    const filteredPlaces = getFilteredPlacesList(places, query);
 
     return (
       <div
@@ -46,7 +53,7 @@ class SearchPlaces extends Component {
         <input
           type = "text"
           className = "search-input"
-          placeholder = "Search by park name"
+          placeholder = "Search by park name or area"
           onChange = {(event) => this.handleChange(event.target.value)}
         />
         <PlacesList

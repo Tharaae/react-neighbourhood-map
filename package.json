@@ -6,7 +6,9 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-google-maps": "^9.4.5",
-    "react-scripts": "1.1.4"
+    "react-modal": "^3.5.1",
+    "react-scripts": "1.1.4",
+    "sort-by": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
