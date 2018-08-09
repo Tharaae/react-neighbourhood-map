@@ -20,7 +20,6 @@ class PlaceInfoModal extends Component {
   }
 
   afterOpenModal() {
-    console.log('afterOpenModal');
     const {place} = this.props;
     const descriptionElement = document.getElementById(`modal${place.id}`);
     const linkElement = document.getElementById(`link${place.id}`);
@@ -44,9 +43,6 @@ class PlaceInfoModal extends Component {
       } else {
         descriptionElement.innerHTML = NO_AVAILABLE_DATA;
       }
-
-      console.log(firstPage);
-
     }).catch((error) => {
       descriptionElement.innerHTML = NO_AVAILABLE_DATA;
       console.log('Error fetching data from Wikipedia: ', error);
@@ -63,15 +59,41 @@ class PlaceInfoModal extends Component {
 
     return(
       <div>
-        <a className="place-info-more-link" onClick={this.openModal}>Tell me more!</a>
+        <a
+          className="place-info-more-link"
+          onClick={this.openModal}
+          onKeyUp={(event) => {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+              this.openModal();
+            }
+          }}
+          tabIndex="0"
+        >
+          Tell me more!
+        </a>
+
         <Modal
           className="place-info-modal"
-          isOpen={this.state.isOpen}
+          isOpen={isOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
           contentLabel={place.name}
+          ariaHideApp={false}
         >
-          <a class="place-info-modal-close" onClick={this.closeModal} tabindex="0">&times;</a>
+          <a
+            className="place-info-modal-close"
+            onClick={this.closeModal}
+            onKeyUp={(event) => {
+              event.preventDefault();
+              if (event.keyCode === 13) {
+                this.closeModal();
+              }
+            }}
+            tabIndex="0"
+          >
+            &times;
+          </a>
           <div className="place-info-title">{place.name}</div>
           <div className="place-info-address">{place.vicinity}</div>
           {place.photos && place.photos[0] &&
@@ -79,7 +101,7 @@ class PlaceInfoModal extends Component {
           }
           <div className="place-info-desc-container">
             <div id={`modal${place.id}`} className="place-info-description"></div>
-            <a id={`link${place.id}`} className="place-info-more-link" target="_blank">
+            <a id={`link${place.id}`} className="place-info-more-link" target="_blank" tabIndex="0">
               Tell me more on Wikipedia!
             </a>
           </div>

@@ -10,7 +10,16 @@ import './App.css';
  */
 const MapComponent = withScriptjs(withGoogleMap((props) => {
 
-  const {defaultCenter, defaultZoom, onMapLoaded, places, selectedPlaceId, handlePlaceSelection} = props;
+  const {
+    defaultCenter,
+    defaultZoom,
+    onMapLoaded,
+    places,
+    selectedPlaceId,
+    infoOpen,
+    handlePlaceSelection,
+    closeInfo
+  } = props;
 
   // GoogleMap render uses the passed array of places prop from parent App components
   // to display markers for according to current search results.
@@ -35,13 +44,17 @@ const MapComponent = withScriptjs(withGoogleMap((props) => {
           animation={place.id === selectedPlaceId ? window.google.maps.Animation.BOUNCE : null}
           onClick={() => handlePlaceSelection(place.id)}
         >
-          {place.id === selectedPlaceId &&
-            <InfoWindow>
+          {place.id === selectedPlaceId && infoOpen &&
+            <InfoWindow tabIndex="0" onCloseClick={closeInfo}>
               <div className="place-info">
                 <div className="place-info-title">{place.name}</div>
                 <div className="place-info-address">{place.vicinity}</div>
                 {place.photos && place.photos[0] &&
-                  <img className="place-info-img" src={place.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200})} alt={place.name}/>
+                  <img
+                    className="place-info-img"
+                    src={place.photos[0].getUrl({'maxWidth': 200, 'maxHeight': 200})}
+                    alt={place.name}
+                  />
                 }
                 <PlaceInfoModal place={place} />
               </div>

@@ -24,20 +24,12 @@ class PlacesList extends Component {
    * Takes the newly selected/clicked Place component as argument.
    */
   handlePlaceSelection(newPlaceId) {
-    // the previously selected Place item
-    const {selectedPlaceId} = this.state;
+    // set selected place state to the clicked one
+    this.setState({selectedPlaceId: newPlaceId});
 
-    // if there is there's no previously selected place
-    // OR if the previously selected place is different than that newly selected
-    if(newPlaceId !== selectedPlaceId) {
-      // set the current selected place state to the newly clicked one
-      // to re-render accordingly
-      this.setState({selectedPlaceId: newPlaceId});
-
-      // run handlePlaceSelection function passed from parent App component
-      // to handle correnponding map marker selection
-      this.props.handlePlaceSelection(newPlaceId);
-    }
+    // run handlePlaceSelection function passed from parent App component
+    // to handle correnponding map marker selection
+    this.props.handlePlaceSelection(newPlaceId);
   }
 
   /*
@@ -63,7 +55,7 @@ class PlacesList extends Component {
 
     // pass selected place id to Place components to style accordingly
     return (
-      <ol className="list">
+      <ol className="list" aria-label = "Filtered parks list">
         {sortedPlaces.map((place) => (
           <li key={place.id}>
             <Place

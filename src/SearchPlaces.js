@@ -35,6 +35,7 @@ class SearchPlaces extends Component {
     const {
       places,
       selectedPlaceId,
+      listOpen,
       handlePlaceSelection,
       getFilteredPlacesList
     } = this.props;
@@ -46,12 +47,15 @@ class SearchPlaces extends Component {
     const filteredPlaces = getFilteredPlacesList(places, query);
 
     return (
-      <div
+      <section
         id = "list-panel"
-        className = "list-panel"
+        className = {"list-panel" + (listOpen ? "" : " list-panel-closed")}
+        aria-label = "Places List Section"
       >
         <input
           type = "text"
+          role = "search"
+          aria-label = "Search parks list by park name or area"
           className = "search-input"
           placeholder = "Search by park name or area"
           onChange = {(event) => this.handleChange(event.target.value)}
@@ -61,7 +65,7 @@ class SearchPlaces extends Component {
           selectedPlaceId={selectedPlaceId}
           handlePlaceSelection = {handlePlaceSelection}
         />
-      </div>
+      </section>
     );
   }
 }

@@ -17,7 +17,17 @@ const Place = (props) => {
       className= {place.id === selectedPlaceId? "place place-selected" : "place"}
       onClick={() => handlePlaceSelection(place.id)}
     >
-      {place.name}
+      <a
+        tabIndex="0"
+        onKeyUp={(event) => {
+          event.preventDefault();
+          if (event.keyCode === 13) {
+            handlePlaceSelection(place.id);
+          }
+        }}
+      >
+        {place.name}
+      </a>
     </div>
   );
 }

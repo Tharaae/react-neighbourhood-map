@@ -12,7 +12,11 @@ class App extends Component {
     // places list (to be fetched by setInitialPlacesList)
     places: [],
     // currently selected place id (initiall set to empty string)
-    selectedPlaceId: ''
+    selectedPlaceId: '',
+    // status of parks list panel (closed or open)
+    listOpen: true,
+    // status of marker info window (closed or open)
+    infoOpen: false
   }
 
   constructor() {
@@ -21,6 +25,7 @@ class App extends Component {
     this.setInitialPlacesList = this.setInitialPlacesList.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handlePlaceSelection = this.handlePlaceSelection.bind(this);
+    this.closeInfo = this.closeInfo.bind(this);
   }
 
   /*
@@ -118,7 +123,11 @@ class App extends Component {
     // set places state to changed list to invoke re-render
     // and clear any current place selection
     if(changed) {
-      this.setState({places, selectedPlaceId: null});
+      this.setState({
+        places,
+        selectedPlaceId: '',
+        infoOpen: false
+      });
     }
   }
 
@@ -127,46 +136,89 @@ class App extends Component {
    * This function is passed to PlacesList component to run onClick.
    */
   handlePlaceSelection(selectedPlaceId) {
-    // if newly selected place is different than that already sekected,
     // set selectedPlaceId to the newly select place to re-render accordingly
-    if(selectedPlaceId !== this.state.selectedPlaceId) {
-      this.setState({selectedPlaceId});
-    }
+    this.setState({selectedPlaceId});
+    this.setState({infoOpen: true});
+  }
+
+  /*
+   * Closes/Opens the parks list panel and sets listOpen state to re-render
+   */
+  toggleListStatus() {
+    const {listOpen} = this.state;
+    document.getElementById('map-container').classList.toggle('map-container-expanded');
+    this.setState({listOpen: !listOpen});
+  }
+
+  /*
+   * Flags selected place marker info window as closed to re-render accordingly.
+   * This function to called by InfoWindow onCloseClick in MapComponent
+   * to allow info window re-open when already selected place is clicked
+   * after closing info window.
+   */
+  closeInfo() {
+    this.setState({infoOpen: false});
   }
 
   render() {
-    const {defaultCenter, defaultZoom, places, selectedPlaceId} = this.state;
+    const {
+      defaultCenter,
+      defaultZoom,
+      places,
+      selectedPlaceId,
+      listOpen,
+      infoOpen
+    } = this.state;
 
     return (
       <div id="app" className="app">
-        <SearchPlaces
-          places={places}
-          selectedPlaceId={selectedPlaceId}
-          handleSearch={this.handleSearch}
-          handlePlaceSelection={this.handlePlaceSelection}
-          getFilteredPlacesList={this.getFilteredPlacesList}
-        />
+        <header className="app-header">
+          <h1><a href="/">City National Parks</a></h1>
+          <button
+            className="menu-button"
+            aria-label="open or close parks list panel"
+            onClick={()=> this.toggleListStatus()}
+          >
+            &#9776;
+          </button>
 
-        <div className="main">
-          <header className="app-header">
-            <h1>City National Parks</h1>
-          </header>
+        </header>
+
+        <main className="main">
+
+          <SearchPlaces
+            places={places}
+            selectedPlaceId={selectedPlaceId}
+            listOpen={listOpen}
+            handleSearch={this.handleSearch}
+            handlePlaceSelection={this.handlePlaceSelection}
+            getFilteredPlacesList={this.getFilteredPlacesList}
+          />
 
           <MapComponent
-            isMarkerShown
             googleMapURL={this.googleMapsAPIsURL}
             loadingElement={<div />}
-            containerElement={<div className="map-container" />}
-            mapElement={<div className="map" />}
+            containerElement={
+              <section
+                id="map-container"
+                className="map-container"
+                role="application"
+                aria-label="map"
+                tabIndex="0"
+              />
+            }
+            mapElement={<div className="map" tabIndex="0"/>}
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
             setMarker={this.setMarker}
             onMapLoaded={this.setInitialPlacesList}
             places={places}
             selectedPlaceId={selectedPlaceId}
+            infoOpen={infoOpen}
             handlePlaceSelection={this.handlePlaceSelection}
+            closeInfo={this.closeInfo}
           />
-        </div>
+        </main>
       </div>
     );
   }
