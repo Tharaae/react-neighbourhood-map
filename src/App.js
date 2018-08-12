@@ -71,7 +71,7 @@ class App extends Component {
   /*
    * Gets the filtered list of places according to the provided query.
    * Used in multiple places. So, it's important to have the filtering method
-   * in a single function for consistency across the code.
+   * as a single function in the main app for consistency across the code.
    */
   getFilteredPlacesList(places, query) {
     // return places whose name or address(vicinity) includes the keyword
@@ -80,6 +80,7 @@ class App extends Component {
       place.vicinity.toLowerCase().includes(query)
     );
   }
+
   /*
    * Does actions required when a new search takes place.
    * Takes newly entered serch term/query as argument.
@@ -203,11 +204,11 @@ class App extends Component {
                 id="map-container"
                 className="map-container"
                 role="application"
-                aria-label="map"
+                aria-label="map with parks markers"
                 tabIndex="0"
               />
             }
-            mapElement={<div className="map" tabIndex="0"/>}
+            mapElement={<div className="map"/>}
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
             setMarker={this.setMarker}

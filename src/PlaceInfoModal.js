@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
+import PropTypes from 'prop-types';
 import './App.css';
 
 class PlaceInfoModal extends Component {
+  
+  static propTypes = {
+    place: PropTypes.object.isRequired
+  }
+
   state = {
     isOpen: false
   }
@@ -78,7 +84,7 @@ class PlaceInfoModal extends Component {
           isOpen={isOpen}
           onAfterOpen={this.afterOpenModal}
           onRequestClose={this.closeModal}
-          contentLabel={place.name}
+          contentLabel={place.name + ' details modal'}
           ariaHideApp={false}
         >
           <a
@@ -91,17 +97,34 @@ class PlaceInfoModal extends Component {
               }
             }}
             tabIndex="0"
+            aria-label="close park details modal"
           >
             &times;
           </a>
           <div className="place-info-title">{place.name}</div>
-          <div className="place-info-address">{place.vicinity}</div>
+          <div className="place-info-address" arial-label="park short address">
+            {place.vicinity}
+          </div>
           {place.photos && place.photos[0] &&
-            <img className="place-info-img" src={place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})} alt={place.name}/>
+            <img
+              className="place-info-img"
+              src={place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400})}
+              alt={place.name + ' image'}
+            />
           }
           <div className="place-info-desc-container">
-            <div id={`modal${place.id}`} className="place-info-description"></div>
-            <a id={`link${place.id}`} className="place-info-more-link" target="_blank" tabIndex="0">
+            <div
+              id={`modal${place.id}`}
+              className="place-info-description"
+              aria-label="park description from Wikipedia"
+            >
+            </div>
+            <a
+              id={`link${place.id}`}
+              className="place-info-more-link"
+              target="_blank"
+              tabIndex="0"
+            >
               Tell me more on Wikipedia!
             </a>
           </div>
@@ -110,5 +133,6 @@ class PlaceInfoModal extends Component {
     );
   }
 }
+
 
 export default PlaceInfoModal;

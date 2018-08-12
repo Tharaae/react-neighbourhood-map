@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import PlacesList from './PlacesList';
 import './App.css';
 
@@ -7,6 +8,16 @@ import './App.css';
  * and filtering Places accordingly
  */
 class SearchPlaces extends Component {
+  
+  static propTypes = {
+    places: PropTypes.array.isRequired,
+    selectedPlaceId: PropTypes.string,
+    listOpen: PropTypes.bool,
+    handlePlaceSelection: PropTypes.func.isRequired,
+    getFilteredPlacesList: PropTypes.func.isRequired,
+    handleSearch: PropTypes.func.isRequired
+  }
+
   state = {
     // current serch term/query entered by user (initially empty string)
     query: ''
@@ -53,6 +64,7 @@ class SearchPlaces extends Component {
         aria-label = "Places List Section"
       >
         <input
+          tabIndex = {listOpen ? "0" : "-1"}
           type = "text"
           role = "search"
           aria-label = "Search parks list by park name or area"
@@ -62,7 +74,8 @@ class SearchPlaces extends Component {
         />
         <PlacesList
           places = {filteredPlaces}
-          selectedPlaceId={selectedPlaceId}
+          selectedPlaceId = {selectedPlaceId}
+          listOpen = {listOpen}
           handlePlaceSelection = {handlePlaceSelection}
         />
       </section>

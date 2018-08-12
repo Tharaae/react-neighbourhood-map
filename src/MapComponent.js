@@ -1,6 +1,13 @@
 import React from 'react';
 import PlaceInfoModal from './PlaceInfoModal';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps";
+import PropTypes from 'prop-types';
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker,
+  InfoWindow
+} from "react-google-maps";
 import './App.css';
 
 /*
@@ -65,5 +72,16 @@ const MapComponent = withScriptjs(withGoogleMap((props) => {
     </GoogleMap>
   );
 }));
+
+MapComponent.propTypes = {
+  defaultCenter: PropTypes.object.isRequired,
+  defaultZoom: PropTypes.number.isRequired,
+  onMapLoaded: PropTypes.func.isRequired,
+  places: PropTypes.array.isRequired,
+  selectedPlaceId: PropTypes.string,
+  infoOpen: PropTypes.bool,
+  handlePlaceSelection: PropTypes.func.isRequired,
+  closeInfo: PropTypes.func.isRequired
+};
 
 export default MapComponent;

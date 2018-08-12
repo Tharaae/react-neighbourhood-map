@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Place from './Place';
+import PropTypes from 'prop-types';
 import sortBy from 'sort-by';
 import './App.css';
 
@@ -8,6 +9,12 @@ import './App.css';
  * It uses Place component for every list item.
  */
 class PlacesList extends Component {
+
+  static propTypes = {
+    places: PropTypes.array.isRequired,
+    listOpen: PropTypes.bool,
+    handlePlaceSelection: PropTypes.func.isRequired
+  }
 
   state = {
     // the place currently selected/clicked by the user (initially null)
@@ -47,7 +54,7 @@ class PlacesList extends Component {
   }
 
   render() {
-    const {places} = this.props;
+    const {places, listOpen} = this.props;
     const {selectedPlaceId} = this.state;
 
     // get sorted list by place name
@@ -61,6 +68,7 @@ class PlacesList extends Component {
             <Place
               place={place}
               selectedPlaceId={selectedPlaceId}
+              listOpen={listOpen}
               handlePlaceSelection={this.handlePlaceSelection}
             />
           </li>

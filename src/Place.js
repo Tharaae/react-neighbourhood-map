@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './App.css';
 
 /*
@@ -8,7 +9,7 @@ import './App.css';
 const Place = (props) => {
 
   //Current selected/clicked place is passed from parent PlacesList component.
-  const {place, handlePlaceSelection, selectedPlaceId} = props;
+  const {place, handlePlaceSelection, selectedPlaceId, listOpen} = props;
 
   //So, this Place is styled as selected if it is the currently selected one.
   return (
@@ -18,7 +19,7 @@ const Place = (props) => {
       onClick={() => handlePlaceSelection(place.id)}
     >
       <a
-        tabIndex="0"
+        tabIndex = {listOpen ? "0" : "-1"}
         onKeyUp={(event) => {
           event.preventDefault();
           if (event.keyCode === 13) {
@@ -31,5 +32,12 @@ const Place = (props) => {
     </div>
   );
 }
+
+Place.propTypes = {
+  place: PropTypes.object.isRequired,
+  selectedPlaceId: PropTypes.string,
+  listOpen: PropTypes.bool,
+  handlePlaceSelection: PropTypes.func.isRequired
+};
 
 export default Place;
