@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ErrorBoundary from './ErrorBoundary';
 import MapComponent from './MapComponent';
 import SearchPlaces from './SearchPlaces';
 import './App.css';
@@ -21,7 +22,6 @@ class App extends Component {
 
   constructor() {
     super();
-    this.googleMapsAPIsURL = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA83ru5Va-VflHbHHAxRcz1TV9QMspFJa0&force=pwa';
     this.setInitialPlacesList = this.setInitialPlacesList.bind(this);
     this.getStaticPlacesList = this.getStaticPlacesList.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -40,7 +40,7 @@ class App extends Component {
       const google = window.google;
 
       // if Google Maps APIs available
-      if (google &&   google.maps) {
+      if (google &&   google.maps && false) {
         const service = new google.maps.places.PlacesService(document.createElement('div'));
 
         // get nearby places with place type 'park' within 2km of center
@@ -84,9 +84,11 @@ class App extends Component {
    * It makes places list content available offline.
    */
   getStaticPlacesList() {
-    fetch('data/parks-list.json')
+    console.log('statis list', window.google);
+    fetch('./data/parks-list.json')
     .then((responce) => responce.json())
     .then((places) => {
+      console.log(places);
       places.forEach((place) => {
         // initially set all places as visible (for markers display)
         place['visible'] = true;
@@ -224,29 +226,18 @@ class App extends Component {
             getFilteredPlacesList={this.getFilteredPlacesList}
           />
 
-          <MapComponent
-            googleMapURL={this.googleMapsAPIsURL}
-            loadingElement={<div />}
-            containerElement={
-              <section
-                id="map-container"
-                className="map-container"
-                role="application"
-                aria-label="map with parks markers"
-                tabIndex="0"
-              />
-            }
-            mapElement={<div className="map"/>}
-            defaultCenter={defaultCenter}
-            defaultZoom={defaultZoom}
-            setMarker={this.setMarker}
-            onMapLoaded={this.setInitialPlacesList}
-            places={places}
-            selectedPlaceId={selectedPlaceId}
-            infoOpen={infoOpen}
-            handlePlaceSelection={this.handlePlaceSelection}
-            closeInfo={this.closeInfo}
-          />
+          <ErrorBoundary handleError={this.getStaticPlacesList}>
+            <MapComponent
+              defaultCenter={defaultCenter}
+              defaultZoom={defaultZoom}
+              places={places}
+              selectedPlaceId={selectedPlaceId}
+              infoOpen={infoOpen}
+              onMapLoaded={this.setInitialPlacesList}
+              handlePlaceSelection={this.handlePlaceSelection}
+              closeInfo={this.closeInfo}
+            />
+          </ErrorBoundary>
         </main>
       </div>
     );
