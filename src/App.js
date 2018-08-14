@@ -21,8 +21,9 @@ class App extends Component {
 
   constructor() {
     super();
-    this.googleMapsAPIsURL = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA83ru5Va-VflHbHHAxRcz1TV9QMspFJa0';
+    this.googleMapsAPIsURL = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA83ru5Va-VflHbHHAxRcz1TV9QMspFJa0&force=pwa';
     this.setInitialPlacesList = this.setInitialPlacesList.bind(this);
+    this.getStaticPlacesList = this.getStaticPlacesList.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handlePlaceSelection = this.handlePlaceSelection.bind(this);
     this.closeInfo = this.closeInfo.bind(this);
@@ -38,34 +39,61 @@ class App extends Component {
       const {defaultCenter} = this.state;
       const google = window.google;
 
-      const service = new google.maps.places.PlacesService(document.createElement('div'));
+      // if Google Maps APIs available
+      if (google &&   google.maps) {
+        const service = new google.maps.places.PlacesService(document.createElement('div'));
 
-      // get nearby places with place type 'park' within 2km of center
-      service.nearbySearch(
-        {
-          location: new google.maps.LatLng(defaultCenter.lat,defaultCenter.lng),
-          radius: 30000,
-          type: ['park'],
-          keyword: 'national park'
-        },
-        (places, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            // if parke array successfully fetched, set places state accordingly
-            if(places.length !== 0) {
-              places.forEach((place) => {
-                // initially set all places as visible (for markers display)
-                place['visible'] = true;
-              });
-              this.setState({places});
-            } else {
-              alert('No places retrieved!');
+        // get nearby places with place type 'park' within 2km of center
+        service.nearbySearch(
+          {
+            location: new google.maps.LatLng(defaultCenter.lat,defaultCenter.lng),
+            radius: 30000,
+            type: ['park'],
+            keyword: 'national park'
+          },
+          (places, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              // if parke array successfully fetched, set places state accordingly
+              if(places.length !== 0) {
+                places.forEach((place) => {
+                  // initially set all places as visible (for markers display)
+                  place['visible'] = true;
+                });
+                this.setState({places});
+              } else { //if no places retrieved, get places data from static file
+                this.getStaticPlacesList();
+                console.log('No places retrieved!');
+              }
+            } else {//if error occured, get places data from static JSON file
+              this.getStaticPlacesList();
+              console.log(`Error ${status} occured.`);
             }
-          } else {
-            alert(`Error ${status} occured.`);
           }
-        }
-      );
+        );
+      } else { // if Google Maps APIs is not available
+        this.getStaticPlacesList();
+        console.log('Google Maps is not available!');
+      }
     }
+  }
+
+  /*
+   * Fetches places list data from static JSON file.
+   * This function is called in case zero places retrieved by Google Maps APIs
+   * or any error occured while retrieving the list.
+   * It makes places list content available offline.
+   */
+  getStaticPlacesList() {
+    fetch('data/parks-list.json')
+    .then((responce) => responce.json())
+    .then((places) => {
+      places.forEach((place) => {
+        // initially set all places as visible (for markers display)
+        place['visible'] = true;
+      });
+      this.setState({places});
+    })
+    .catch((error) => alert('Error occured getting places list:', error));
   }
 
   /*

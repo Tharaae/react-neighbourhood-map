@@ -21,6 +21,10 @@ This project is a single page application featuring a map of Sydney and surround
 
 * When the _Tell me more_ link in the place info window is clicked, a modal window opens including further details about the place (name, address, a bigger photo, a description of the park obtained from Wikipedia and a link to the Wikipedia page of this park). **Wikipedia APIs** are used for this functionality.
 
+_Note that:_
+* For few places, no image is available. In that case, image placeholder is used instead.
+* Also for some places, no Wikipedia data retrieved. In that case, a descriptive message is displayed.
+
 ## How to run the App
 
 ### To run the app as development build:
