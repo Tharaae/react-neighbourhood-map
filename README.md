@@ -1,6 +1,6 @@
 # Udacity FEND - React / Google Maps APIs - Neighbourhood Map Project
 **By _Tharaa Elmorssi_**
-
+---
 
 ## IMPORTANT NOTE
 This project uses **Google Maps APIs** to display the map. However, the map will be greyed with "_for development purposes only_" watermark all over the map, in addition to an alert message that pops up on loading the app saying "_This page can't load Google Maps correctly._". The reason is clearly stated in the console log: "_You have exceeded your request quota for this API_". To get this message removed, payment for upgrade is required by Google.
@@ -12,7 +12,7 @@ This project is a single page application featuring a map of Sydney and surround
 
 * This project was bootstrapped with `create-react-app` package.
 
-* It initially displays a list of 20 national parks located in and around Sydney, Australia. The list data is retrieved via **Google Maps APIs Places Library**.
+* It initially displays a list of 20 national parks located in and around Sydney, Australia. The list data is retrieved via **Google Maps APIs Places Library**. If fetching the places list by Google APIs failed for any reason (even for going offline), the static list is used by the App instead. However, a descriptive message stating the failure is logged to the console.
 
 * It initially displays a map of Sydney and surrounding suburbs with markers for the 20 parks locations in the list. The map and markers are implemented using **Google Maps APIs**.
 
