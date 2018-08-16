@@ -12,7 +12,7 @@ This project is a single page application featuring a map of Sydney and surround
 
 * This project was bootstrapped with `create-react-app` package.
 
-* It initially displays a list of 20 national parks located in and around Sydney, Australia. The list data is retrieved via **Google Maps APIs Places Library**. If fetching the places list by Google APIs failed for any reason (even for going offline), the static list is used by the App instead. However, a descriptive message stating the failure is logged to the console.
+* It initially displays a list of 20 national parks located in and around Sydney, Australia. The list data is retrieved via **Google Maps APIs Places Library**. If fetching the places list by Google APIs failed for any reason (even for going offline), a static list is used by the App instead. Also, a descriptive message stating the failure is logged to the console.
 
 * It initially displays a map of Sydney and surrounding suburbs with markers for the 20 parks locations in the list. The map and markers are implemented using **Google Maps APIs**.
 
