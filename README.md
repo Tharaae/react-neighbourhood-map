@@ -1,9 +1,9 @@
 # Udacity FEND - React / Google Maps APIs - Neighbourhood Map Project
 **By _Tharaa Elmorssi_**
----
+
 
 ## IMPORTANT NOTE
-This project uses **Google Maps APIs** to display the map. However, the map will be greyed with "_for development purposes only_" watermark all the map, in addition to an alert message that pops up on loading the app saying "_This page can't load Google Maps correctly._". The reason is clearly stated in the console: "_You have exceeded your request quota for this API_". To get this message removed, payment for upgrade is required by google.
+This project uses **Google Maps APIs** to display the map. However, the map will be greyed with "_for development purposes only_" watermark all over the map, in addition to an alert message that pops up on loading the app saying "_This page can't load Google Maps correctly._". The reason is clearly stated in the console log: "_You have exceeded your request quota for this API_". To get this message removed, payment for upgrade is required by Google.
 
 ## Project Overview
 This project is a single page application featuring a map of Sydney and surrounding suburbs with National Parks locations listed and highlighted on the map. Additional information is also provided using third-party APIs.
@@ -52,8 +52,8 @@ This project is a single page application featuring a map of Sydney and surround
 Simple tests are created to ensure that the App runs without crashes.
 
 The following packages are used for test:
-- `react-test-renderer`
-- `enzyme`
-- `enzyme-adapter-react-16`
+- react-test-renderer
+- enzyme
+- enzyme-adapter-react-16
 
 Run the tests with `npm test`.
