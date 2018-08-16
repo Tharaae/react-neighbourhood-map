@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
+import imgPlaceholder from './img/img-not-available400.jpg';
 import './App.css';
 
 /*
@@ -18,8 +19,6 @@ class PlaceInfoModal extends Component {
     isOpen: false,
     imageError: false
   }
-
-  IMAGE_PLACEHOLDER_URL = 'img/img-not-available400.jpg';
 
   constructor() {
     super();
@@ -51,27 +50,34 @@ class PlaceInfoModal extends Component {
 
     imageElement.src = this.getPlacePhotoSrc(place);
 
+    // console log messages
     const NO_AVAILABLE_DATA = 'No desription available on Wikipedia!';
     const API_FAILED = 'Could not retrieve description from Wikipedia!'
 
+    // Fetch required park description from Wikipedia
     fetch(`https://en.wikipedia.org/w/api.php?titles=${place.name}&prop=info|extracts&exintro=&explaintext=&format=json&action=query&inprop=url&origin=*`)
     .then((response) => {
-      if(response.ok) {
+      if(response.ok) { // if successful Wikipedia API call
         return response.json();
-      } else {
+      } else { // if failed Wikipedia API call
         descriptionElement.innerHTML = NO_AVAILABLE_DATA;
       }
-    }).then((data) => {
+    }).then((data) => { // if successful Wikipedia API call
+      // get pages data from retrieved JSON
       const pages = data.query.pages;
+      // get the first page if exists or null otherwise
       const firstPage = pages.length !== 0 ? pages[Object.keys(pages)[0]] : null;
 
-      if(firstPage) {
-        descriptionElement.innerHTML = firstPage.extract ? firstPage.extract + ' <strong><em>(Description from Wikipedia)</em></strong>' : NO_AVAILABLE_DATA;
+      if(firstPage) { // if a relavent Wikipedia page exists
+        descriptionElement.innerHTML =
+          firstPage.extract ?
+            firstPage.extract + ' <strong><em>(Description from Wikipedia)</em></strong>'
+            : NO_AVAILABLE_DATA;
         linkElement.href = firstPage.fullurl;
-      } else {
+      } else { // if no relavent Wikipedia page
         descriptionElement.innerHTML = NO_AVAILABLE_DATA;
       }
-    }).catch((error) => {
+    }).catch((error) => { // if error calling Wikipedia API
       descriptionElement.innerHTML = API_FAILED;
       console.log('Error fetching data from Wikipedia: ', error);
     });
@@ -79,14 +85,14 @@ class PlaceInfoModal extends Component {
 
   /*
    * Gets photo url via getUrl function provided by Google Maps APIs
-   * or from static JSON file data if getURL is not available.
+   * or from static data if getURL is not available.
    * Otherwise, image placeholder is displayed.
    */
   getPlacePhotoSrc(place) {
     if(!this.state.imageError && place.photos && place.photos[0] && place.photos[0].getUrl && window.google) {
       return place.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400});
     } else {
-      return place.largeImageUrl? place.largeImageUrl : this.IMAGE_PLACEHOLDER_URL;
+      return place.largeImageUrl? place.largeImageUrl : imgPlaceholder;
     }
   };
 
@@ -156,7 +162,7 @@ class PlaceInfoModal extends Component {
             id={`image${place.id}`}
             className="place-info-img"
             alt={place.name + ' image'}
-            src={imageError ? this.IMAGE_PLACEHOLDER_URL : ''}
+            src={imageError ? imgPlaceholder : ''}
             onError={this.handleImageError}
           />
           <div className="place-info-desc-container">

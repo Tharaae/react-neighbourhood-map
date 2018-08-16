@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import MapComponent from './MapComponent';
 import SearchPlaces from './SearchPlaces';
+import {parks} from './parks-list.js';
 import './App.css';
 
 class App extends Component {
@@ -22,6 +23,7 @@ class App extends Component {
 
   constructor() {
     super();
+    this.googleMapsAPIsURL = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyA83ru5Va-VflHbHHAxRcz1TV9QMspFJa0&force=pwa';
     this.setInitialPlacesList = this.setInitialPlacesList.bind(this);
     this.getStaticPlacesList = this.getStaticPlacesList.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
@@ -31,7 +33,8 @@ class App extends Component {
 
   /*
    * Fetches initial places array.
-   * It gets the nearby parks to the center location using Google Maps APIs
+   * It gets the nearby parks to the center location using Google Maps APIs.
+   * If Google Maps APIs are not available, then from static list.
    */
   setInitialPlacesList() {
     // if places array not fetched yet
@@ -40,7 +43,7 @@ class App extends Component {
       const google = window.google;
 
       // if Google Maps APIs available
-      if (google &&   google.maps && false) {
+      if (google && google.maps) {
         const service = new google.maps.places.PlacesService(document.createElement('div'));
 
         // get nearby places with place type 'park' within 2km of center
@@ -60,17 +63,17 @@ class App extends Component {
                   place['visible'] = true;
                 });
                 this.setState({places});
-              } else { //if no places retrieved, get places data from static file
+              } else { //if no places retrieved, get places data from static array
                 this.getStaticPlacesList();
                 console.log('No places retrieved!');
               }
-            } else {//if error occured, get places data from static JSON file
+            } else {//if error occured, get places data from static array
               this.getStaticPlacesList();
               console.log(`Error ${status} occured.`);
             }
           }
         );
-      } else { // if Google Maps APIs is not available
+      } else { // if Google Maps APIs is not available, get places data from static array
         this.getStaticPlacesList();
         console.log('Google Maps is not available!');
       }
@@ -78,24 +81,20 @@ class App extends Component {
   }
 
   /*
-   * Fetches places list data from static JSON file.
-   * This function is called in case zero places retrieved by Google Maps APIs
+   * Gets places list data from static JS file.
+   * This function is called in case zero places by Google Maps APIs
    * or any error occured while retrieving the list.
-   * It makes places list content available offline.
+   * It makes places list content always available, even offline.
    */
   getStaticPlacesList() {
-    console.log('statis list', window.google);
-    fetch('./data/parks-list.json')
-    .then((responce) => responce.json())
-    .then((places) => {
-      console.log(places);
-      places.forEach((place) => {
-        // initially set all places as visible (for markers display)
-        place['visible'] = true;
-      });
-      this.setState({places});
-    })
-    .catch((error) => alert('Error occured getting places list:', error));
+    //set places to parks imported from parks-list.js
+    const places = parks;
+    places.forEach((place) => {
+      // initially set all places as visible (for markers display)
+      place['visible'] = true;
+    });
+    // set places state to rerender
+    this.setState({places});
   }
 
   /*
@@ -184,8 +183,8 @@ class App extends Component {
   /*
    * Flags selected place marker info window as closed to re-render accordingly.
    * This function to called by InfoWindow onCloseClick in MapComponent
-   * to allow info window re-open when already selected place is clicked
-   * after closing info window.
+   * to allow info window re-open when already selected place
+   * (list item or map marker) is clicked after closing info window.
    */
   closeInfo() {
     this.setState({infoOpen: false});
@@ -226,8 +225,19 @@ class App extends Component {
             getFilteredPlacesList={this.getFilteredPlacesList}
           />
 
-          <ErrorBoundary handleError={this.getStaticPlacesList}>
+          <ErrorBoundary handleMapError={this.getStaticPlacesList}>
             <MapComponent
+              googleMapURL={this.googleMapsAPIsURL}
+              loadingElement={<div />}
+              containerElement={
+                <section
+                  id="map-container"
+                  className="map-container"
+                  role="application"
+                  aria-label="map with parks markers"
+                  tabIndex="0"
+                />}
+              mapElement={<div className="map"/>}
               defaultCenter={defaultCenter}
               defaultZoom={defaultZoom}
               places={places}

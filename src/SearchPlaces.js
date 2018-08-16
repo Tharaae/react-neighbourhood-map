@@ -8,7 +8,7 @@ import './App.css';
  * and filtering Places accordingly
  */
 class SearchPlaces extends Component {
-  
+
   static propTypes = {
     places: PropTypes.array.isRequired,
     selectedPlaceId: PropTypes.string,

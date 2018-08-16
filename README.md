@@ -21,9 +21,11 @@ This project is a single page application featuring a map of Sydney and surround
 
 * When the _Tell me more_ link in the place info window is clicked, a modal window opens including further details about the place (name, address, a bigger photo, a description of the park obtained from Wikipedia and a link to the Wikipedia page of this park). **Wikipedia APIs** are used for this functionality.
 
-_Note that:_
+**_Note that:_**
+* When you close an InfoWindow, you can reopen it by clicking again on the selected list item or on the bouncing marker.
+* Filtering closes any opened info window to prevent app user confusion.
 * For few places, no image is available. In that case, image placeholder is used instead.
-* Also for some places, no Wikipedia data retrieved. In that case, a descriptive message is displayed.
+* Also for some places, no Wikipedia data retrieved. In that case, a descriptive message is displayed stating that no description is available.
 
 ## How to run the App
 
@@ -31,8 +33,9 @@ _Note that:_
 - Clone the submitted project repository to a folder on your local machine
 - Install all project dependencies with `npm install` in the project folder
 - Start the app with `npm start`
+- Browse to the provided URL
 
-_Note that:_ When running the app as development build, **Offline-first Service Worker** will not be available to cache site assets to work offline. To allow this feature, run the app as production build using instructions below.
+**_Note that:_** When running the app as development build, **Offline-first Service Worker** will not be available to cache site assets to work offline. To allow this feature, run the app as production build using instructions below.
 
 ### To run the app as production build:
 - Clone the submitted project repository to a folder on your local machine
@@ -40,3 +43,4 @@ _Note that:_ When running the app as development build, **Offline-first Service 
 - Build the app for production with `npm run build` in the project folder
 - Install serve with `npm i serve -g`
 - Setup a static server for the app with `serve -s build` in the project folder
+- Browse to the provided URL

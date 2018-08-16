@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Place from './Place';
 import PropTypes from 'prop-types';
 import sortBy from 'sort-by';
+import Place from './Place';
 import './App.css';
 
 /*

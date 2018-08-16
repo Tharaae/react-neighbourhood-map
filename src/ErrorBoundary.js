@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 
+/*
+ * This class is used as wrapper for MapComponent in main App component
+ * to catch the error thrown by react-google-maps package in offline mode (bug).
+ * It displays a clean alternative message content when the app works offline
+ * instead of crashing by this known issue.
+ */
 class ErrorBoundary extends Component {
   state = { error: null, errorInfo: null }
-
 
   componentDidCatch(error, errorInfo) {
     // Catch errors in any components below and re-render with error message
@@ -11,10 +16,11 @@ class ErrorBoundary extends Component {
       errorInfo: errorInfo
     });
 
-    // You can also log error messages to an error reporting service here
+    // logs error to console
     console.log('Map Error:', error, errorInfo);
 
-    this.props.handleError();
+    // calls handler passed by parent App component
+    this.props.handleMapError();
   }
 
   render() {
